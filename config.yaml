@@ -1,6 +1,6 @@
 # AWS 基础配置
 region: "cn-north-1"  # 中国区北京，海外用 us-east-1
-bucket: "sagemaker-pipeline-demo-xxx"  # 改成你自己的S3桶名
+bucket: "gangbenger"  # 改成你自己的S3桶名
 prefix: "ml-demo"
 
 # IAM 角色ARN，在SageMaker控制台复制
