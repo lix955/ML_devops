@@ -1,25 +1,27 @@
 version: 0.2
+
 env:
   variables:
-    # 改成你自己的ECR地址
-    ECR_REPOSITORY_URI: 123456789012.dkr.ecr.ap-southeast-1.amazonaws.com/my-demo-service
+    IMAGE_NAME: test-demo
+    IMAGE_TAG: $CODEBUILD_RESOLVED_SOURCE_VERSION
+
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH}
+      - echo "开始前置准备，仅本地构建，不推送ECR"
   build:
     commands:
-      - echo Build started on `date`
-      - docker build -t $ECR_REPOSITORY_URI:$IMAGE_TAG .
+      - echo "本地构建镜像"
+      - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+      - echo "查看本地镜像列表"
+      - docker images
   post_build:
     commands:
-      - echo Pushing Docker image to ECR
-      - docker push $ECR_REPOSITORY_URI:$IMAGE_TAG
+      # 构建完成直接删除本地镜像，释放构建实例磁盘
+      - echo "清理本地构建镜像"
+      - docker rmi ${IMAGE_NAME}:${IMAGE_TAG}
+      - echo "流水线结束，无任何镜像留存、无ECR开销"
+
 artifacts:
-  files: []
-cache:
-  paths:
-    - /root/.docker/**/*
+  files:
+    - '**/*'
