@@ -1,0 +1,15 @@
+# AWS 基础配置
+region: "cn-north-1"  # 中国区北京，海外用 us-east-1
+bucket: "sagemaker-pipeline-demo-xxx"  # 改成你自己的S3桶名
+prefix: "ml-demo"
+
+# IAM 角色ARN，在SageMaker控制台复制
+role_arn: "arn:aws-cn:iam::123456789012:role/SageMakerExecutionRole"
+
+# 实例类型（省钱优先CPU）
+preprocess_instance_type: "ml.t3.medium"
+train_instance_type: "ml.m5.large"
+evaluate_instance_type: "ml.t3.medium"
+
+# 评估阈值
+accuracy_threshold: 0.7
